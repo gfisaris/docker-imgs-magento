@@ -101,6 +101,7 @@ create-iac-aws_ec2_alb() {
   #pwd && ls -all
   cp apploadbalancers/alb.tf.tpl apploadbalancers/$AWS_EC2_ALB.tf
   sed -i "s/AWS_EC2_ALB/$AWS_EC2_ALB/g" apploadbalancers/$AWS_EC2_ALB.tf
+  gitpush "Adding new AWS EC2 ALB: $AWS_EC2_ALB"
 }
 
 ##-- WorkFlow.. --##
