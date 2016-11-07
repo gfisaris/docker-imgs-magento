@@ -5,7 +5,8 @@ machine:
 dependencies:
   post:
     - docker info
-    - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/my_app$CIRCLE_SHA1 .
+    - docker build -t my_app .
+    - docker tag my_app:$CIRCLE_SHA1 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/my_app:$CIRCLE_SHA1
 
 deployment:
   ecr:
