@@ -5,7 +5,7 @@ machine:
 dependencies:
   post:
     - docker info
-    - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com/my_app$CIRCLE_SHA1 .
+    - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/my_app$CIRCLE_SHA1 .
 
 deployment:
   ecr:
