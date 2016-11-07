@@ -11,4 +11,5 @@ deployment:
   ecr:
     branch: master
     commands:
+      - chmod -R 755 ./circle-ci
       - ./circle-ci/push-dckimg2ecr.sh
