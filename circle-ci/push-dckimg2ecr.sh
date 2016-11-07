@@ -10,7 +10,7 @@ configure_aws_cli(){
 }
 
 push-dckimg2ecr(){
-	eval $(aws ecr get-login --region us-east-1)
+	eval $(aws ecr get-login --region $AWS_REGION)
 	docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/my_app:$CIRCLE_SHA1
 }
 
