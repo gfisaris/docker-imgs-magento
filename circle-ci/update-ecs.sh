@@ -3,7 +3,7 @@
 # more bash-friendly output for jq
 JQ="jq --raw-output --exit-status"
 
-prepare-workspace {
+prepare-workspace() {
   mkdir -p ~/deployment.ws
 }
 
