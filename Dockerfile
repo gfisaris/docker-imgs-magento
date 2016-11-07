@@ -14,4 +14,3 @@ RUN /bin/busybox ls -all /var/www/html
 
 VOLUME /var/www/html
 WORKDIR /var/www/html
-
