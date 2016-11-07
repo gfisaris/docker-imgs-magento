@@ -13,3 +13,4 @@ deployment:
     commands:
       - chmod -R 755 ./circle-ci
       - ./circle-ci/push-dckimg2ecr.sh
+      - ./circle-ci/update-ecs.sh
