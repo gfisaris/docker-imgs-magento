@@ -88,11 +88,11 @@ create-iac_aws_ec2_alb_targetgroup() {
 create-iac_aws_ec2_alb_listener() {
   #cd $GIT_FOLDER/$GITHUB_IAC_TF_AWS_EC2_ALB
   #pwd && ls -all
-  cp alb-listeners/listener.tf.tpl alb-listeners/$AWS_EC2_ALB_LST_PRTCL-$AWS_EC2_ALB_LST_PRT.tf
-  sed -i "s/AWS_EC2_ALB/$AWS_EC2_ALB/g" alb-listeners/$AWS_EC2_ALB_LST_PRTCL-$AWS_EC2_ALB_LST_PRT.tf
-  sed -i "s/AWS_EC2_ALB_TG/$AWS_EC2_ALB_TG/g" alb-listeners/$AWS_EC2_ALB_LST_PRTCL-$AWS_EC2_ALB_LST_PRT.tf
-  sed -i "s/AWS_EC2_ALB_LST_PRT/$AWS_EC2_ALB_LST_PRT/g" alb-listeners/$AWS_EC2_ALB_LST_PRTCL-$AWS_EC2_ALB_LST_PRT.tf
-  sed -i "s/AWS_EC2_ALB_LST_PRTCL/$AWS_EC2_ALB_LST_PRTCL/g" alb-listeners/$AWS_EC2_ALB_LST_PRTCL-$AWS_EC2_ALB_LST_PRT.tf
+  cp alb-listeners/listener.tf.tpl alb-listeners/$AWS_EC2_ALB_LST_PRTCL-$AWS_EC2_ALB_LST_PRT-$CIRCLE_SHA1.tf
+  sed -i "s/AWS_EC2_ALB/$AWS_EC2_ALB/g" alb-listeners/$AWS_EC2_ALB_LST_PRTCL-$AWS_EC2_ALB_LST_PRT-$CIRCLE_SHA1.tf
+  sed -i "s/AWS_EC2_ALB_TG/$AWS_EC2_ALB_TG/g" alb-listeners/$AWS_EC2_ALB_LST_PRTCL-$AWS_EC2_ALB_LST_PRT-$CIRCLE_SHA1.tf
+  sed -i "s/AWS_EC2_ALB_LST_PRT/$AWS_EC2_ALB_LST_PRT/g" alb-listeners/$AWS_EC2_ALB_LST_PRTCL-$AWS_EC2_ALB_LST_PRT-$CIRCLE_SHA1.tf
+  sed -i "s/AWS_EC2_ALB_LST_PRTCL/$AWS_EC2_ALB_LST_PRTCL/g" alb-listeners/$AWS_EC2_ALB_LST_PRTCL-$AWS_EC2_ALB_LST_PRT-$CIRCLE_SHA1.tf
   gitpush "Adding new AWS EC2 ALB Listener: $AWS_EC2_ALB_LST_PRTCL-$AWS_EC2_ALB_LST_PRT"
 }
 
