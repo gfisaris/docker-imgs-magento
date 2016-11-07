@@ -5,16 +5,16 @@ JQ="jq --raw-output --exit-status"
 
 # All Variables
 
-WORKING_FOLDER          = "~/deployment.ws"
-GITHUB_IAC_TF_AWS_ECS   = "gfisaris/iac-terraform-aws-ecs"
+WORKING_FOLDER="~/deployment.ws"
+GITHUB_IAC_TF_AWS_ECS="gfisaris/iac-terraform-aws-ecs"
 
-AWS_ECS_CLUSTER         = "my_cluster--$CIRCLE_SHA1"
-AWS_ECS_SERVICE         = "my_service-$CIRCLE_SHA1"
+AWS_ECS_CLUSTER="my_cluster--$CIRCLE_SHA1"
+AWS_ECS_SERVICE="my_service-$CIRCLE_SHA1"
 
-AWS_ECS_TASK            = "my_task-$CIRCLE_SHA1"
-AWS_ECS_TASK_DEFINITION = "my_taskdef-$CIRCLE_SHA1"
+AWS_ECS_TASK="my_task-$CIRCLE_SHA1"
+AWS_ECS_TASK_DEFINITION="my_taskdef-$CIRCLE_SHA1"
 
-AWS_ECS_SERVICE_ALB     = "my_app-$CIRCLE_SHA1"
+AWS_ECS_SERVICE_ALB="my_app-$CIRCLE_SHA1"
 
 
 prepare-workspace() {
