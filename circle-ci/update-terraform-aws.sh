@@ -28,7 +28,7 @@ JQ="jq --raw-output --exit-status"
 
 gitprepare() {
   git config --global user.name "Georgios Fysaris"
-  git config --global user.email gfisairs@gmail.com
+  git config --global user.email gfisaris@gmail.com
   mkdir -p ~/$GIT_FOLDER
 }
 

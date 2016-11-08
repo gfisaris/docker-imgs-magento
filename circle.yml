@@ -13,4 +13,4 @@ deployment:
     commands:
       - chmod -R 755 ./circle-ci
       - ./circle-ci/push-docker_image-aws_ecr.sh
-      - ./circle-ci/update-terraform_aws_resources.sh
+      - ./circle-ci/update-terraform-aws.sh
