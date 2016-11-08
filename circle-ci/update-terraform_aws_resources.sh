@@ -30,15 +30,12 @@ gitprepare() {
   git config --global user.name "Georgios Fysaris"
   git config --global user.email gfisairs@gmail.com
   mkdir -p ~/$GIT_FOLDER
-  ls -all ~/
 }
 
 gitclone() {
   mkdir -p ~/$GIT_FOLDER/$1
-  ls -all ~/$GIT_FOLDER
   cd ~/$GIT_FOLDER/$1
   git clone git@github.com:$1.git .
-  ls -all ~/$GIT_FOLDER/$1
 }
 
 gitpush() {
@@ -48,8 +45,6 @@ gitpush() {
 }
 
 create-iac_aws_ecs_task() {
-  #cd $GIT_FOLDER/$GITHUB_IAC_TF_AWS_ECS
-  #pwd && ls -all
   cp tasks/task.json.tpl tasks/$AWS_ECS_TASK.json
   sed -i "s/DCK_IMG_NAME/my_app/g" tasks/$AWS_ECS_TASK.json
   sed -i "s/DCK_IMG_TAG/$CIRCLE_SHA1/g" tasks/$AWS_ECS_TASK.json
@@ -57,8 +52,6 @@ create-iac_aws_ecs_task() {
 }
 
 create-iac_aws_ecs_taskdefinition() {
-  #cd $GIT_FOLDER/$GITHUB_IAC_TF_AWS_ECS
-  #pwd && ls -all
   cp task_definitions/taskdefinition.tf.tpl task_definitions/$AWS_ECS_TASKDEFINITION.tf
   sed -i "s/AWS_ECS_TASK/$AWS_ECS_TASK/g" task_definitions/$AWS_ECS_TASKDEFINITION.tf
   sed -i "s/AWS_ECS_TASKDEFINITION/$AWS_ECS_TASKDEFINITION/g" task_definitions/$AWS_ECS_TASKDEFINITION.tf
@@ -66,8 +59,6 @@ create-iac_aws_ecs_taskdefinition() {
 }
 
 create-iac_aws_ecs_service() {
-  #cd $GIT_FOLDER/$GITHUB_IAC_TF_AWS_ECS
-  #pwd && ls -all
   cp services/service.tf.tpl services/$AWS_ECS_SERVICE.tf
   sed -i "s/AWS_EC2_ALB_TG/$AWS_EC2_ALB_TG/g" services/$AWS_ECS_SERVICE.tf
   sed -i "s/AWS_ECS_SERVICE/$AWS_ECS_SERVICE/g" services/$AWS_ECS_SERVICE.tf
@@ -76,8 +67,6 @@ create-iac_aws_ecs_service() {
 }
 
 create-iac_aws_ec2_alb_targetgroup() {
-  #cd $GIT_FOLDER/$GITHUB_IAC_TF_AWS_EC2_ALB
-  #pwd && ls -all
   cp alb-targetgroups/targetgroup.tf.tpl alb-targetgroups/$AWS_EC2_ALB_TG.tf
   sed -i "s/AWS_EC2_ALB_TG/$AWS_EC2_ALB_TG/g" alb-targetgroups/$AWS_EC2_ALB_TG.tf
   sed -i "s/AWS_EC2_ALB_TG_PRT/$AWS_EC2_ALB_TG_PRT/g" alb-targetgroups/$AWS_EC2_ALB_TG.tf
@@ -86,8 +75,6 @@ create-iac_aws_ec2_alb_targetgroup() {
 }
 
 create-iac_aws_ec2_alb_listener() {
-  #cd $GIT_FOLDER/$GITHUB_IAC_TF_AWS_EC2_ALB
-  #pwd && ls -all
   cp alb-listeners/listener.tf.tpl alb-listeners/$AWS_EC2_ALB_LST_PRTCL-$AWS_EC2_ALB_LST_PRT-$CIRCLE_SHA1.tf
   sed -i "s/AWS_EC2_ALB/$AWS_EC2_ALB/g" alb-listeners/$AWS_EC2_ALB_LST_PRTCL-$AWS_EC2_ALB_LST_PRT-$CIRCLE_SHA1.tf
   sed -i "s/AWS_EC2_ALB_TG/$AWS_EC2_ALB_TG/g" alb-listeners/$AWS_EC2_ALB_LST_PRTCL-$AWS_EC2_ALB_LST_PRT-$CIRCLE_SHA1.tf
@@ -97,8 +84,6 @@ create-iac_aws_ec2_alb_listener() {
 }
 
 create-iac-aws_ec2_alb() {
-  #cd $GIT_FOLDER/$GITHUB_IAC_TF_AWS_EC2_ALB
-  #pwd && ls -all
   cp apploadbalancers/alb.tf.tpl apploadbalancers/$AWS_EC2_ALB.tf
   sed -i "s/AWS_EC2_ALB/$AWS_EC2_ALB/g" apploadbalancers/$AWS_EC2_ALB.tf
   gitpush "Adding new AWS EC2 ALB: $AWS_EC2_ALB"

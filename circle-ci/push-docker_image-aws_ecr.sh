@@ -9,10 +9,10 @@ configure_aws_cli(){
 	aws configure set default.output json
 }
 
-push-dckimg2ecr(){
+push-dckimg2awsecr(){
 	eval $(aws ecr get-login --region $AWS_REGION)
 	docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/my_app:$CIRCLE_SHA1
 }
 
 configure_aws_cli
-push-dckimg2ecr
+push-dckimg2awsecr
