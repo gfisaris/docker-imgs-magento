@@ -5,9 +5,10 @@ RUN mkdir -p /var/www/html
 
 COPY magento /var/www/html
 
-RUN rm -rf /var/www/html/var/log/* && \
-    ln -sf /proc/self/fd/2 /var/www/html/var/log/system.log && \
-    ln -sf /proc/self/fd/2 /var/www/html/var/log/exception.log && \
+RUN rm -rf /var/www/html/var/log && \
+    mkdir -p /var/www/html/var/log && \
+    /bin/busybox ln -sf /proc/self/fd/2 /var/www/html/var/log/system.log && \
+    /bin/busybox ln -sf /proc/self/fd/2 /var/www/html/var/log/exception.log && \
     /bin/busybox ls -all /var/www/html/var/log/
 
 RUN /bin/busybox chown -R www-data:www-data /var/www/html && \
