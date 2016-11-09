@@ -14,5 +14,5 @@ push-dckimg2awsecr(){
 	docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/my_app:$CIRCLE_SHA1
 }
 
-configure_aws_cli
-push-dckimg2awsecr
+#configure_aws_cli
+#push-dckimg2awsecr

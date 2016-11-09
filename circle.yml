@@ -1,4 +1,6 @@
 machine:
+  timezone:
+    Europe/London
   services:
     - docker
 
@@ -6,6 +8,8 @@ dependencies:
   post:
     - docker info
     - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/my_app:$CIRCLE_SHA1 .
+    - eval $(aws ecr get-login --region $AWS_REGION)
+    - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/my_app:$CIRCLE_SHA1
 
 deployment:
   ecr:
