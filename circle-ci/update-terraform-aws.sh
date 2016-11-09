@@ -5,20 +5,23 @@ JQ="jq --raw-output --exit-status"
 
 ##-- All Variables --##
 
+#APPLICATION="myapp"
+#ENVIRONMENT="stg"
+
   # GitHub.com Repos
-  GIT_FOLDER=".myGitRepos"
+  LOCAL_GIT_FOLDER=".myGitRepos"
   GITHUB_IAC_TF_AWS_ECS="gfisaris/iac-terraform-aws-ecs"
   GITHUB_IAC_TF_AWS_EC2_ALB="gfisaris/iac-terraform-aws-ec2-alb"
 
   # AWS ECS
-  AWS_ECS_CLUSTER="my_cluster--$CIRCLE_SHA1"
-  AWS_ECS_SERVICE="my_service-$CIRCLE_SHA1"
-  AWS_ECS_TASK="my_task-$CIRCLE_SHA1"
-  AWS_ECS_TASKDEFINITION="my_taskdef-$CIRCLE_SHA1"
+  AWS_ECS_CLUSTER="$CIRCLE_SHA1"
+  AWS_ECS_SERVICE="$APP-${$CIRCLE_SHA1:0:7}"
+  AWS_ECS_TASK="$CIRCLE_SHA1"
+  AWS_ECS_TASKDEFINITION="$CIRCLE_SHA1"
 
   # AWS EC2-ALB
-  AWS_EC2_ALB="myapp-$CIRCLE_SHA1"
-  AWS_EC2_ALB_TG="ecs_cls-my_app-$CIRCLE_SHA1"
+  AWS_EC2_ALB="$APP-${$CIRCLE_SHA1:0:7}"
+  AWS_EC2_ALB_TG="ecs_cls-$APP-${$CIRCLE_SHA1:0:7}"
   AWS_EC2_ALB_TG_PRT="80"
   AWS_EC2_ALB_TG_PRTCL="HTTP"
   AWS_EC2_ALB_LST_PRT="80"
@@ -29,12 +32,12 @@ JQ="jq --raw-output --exit-status"
 gitprepare() {
   git config --global user.name "Georgios Fysaris"
   git config --global user.email gfisaris@gmail.com
-  mkdir -p ~/$GIT_FOLDER
+  mkdir -p ~/$LOCAL_GIT_FOLDER
 }
 
 gitclone() {
-  mkdir -p ~/$GIT_FOLDER/$1
-  cd ~/$GIT_FOLDER/$1
+  mkdir -p ~/$LOCAL_GIT_FOLDER/$1
+  cd ~/$LOCAL_GIT_FOLDER/$1
   git clone git@github.com:$1.git .
 }
 

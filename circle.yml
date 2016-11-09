@@ -7,9 +7,9 @@ machine:
 dependencies:
   post:
     - docker info
-    - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/my_app:$CIRCLE_SHA1 .
+    - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$APP:$CIRCLE_SHA1 .
     - eval $(aws ecr get-login --region $AWS_REGION)
-    - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/my_app:$CIRCLE_SHA1
+    - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$APP:$CIRCLE_SHA1
 
 deployment:
   ecr:
