@@ -18,7 +18,7 @@ dependencies:
   post:
     - eval $(aws ecr get-login --region eu-west-1)
     - docker push 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1
-    - sed -i 's/MYMAGENTO_DOCKER_IMAGE_URL/137115356293.dkr.ecr.eu-west-1.amazonaws.com\/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1/g' circleci-webapp-my_magento_eshop-dckcomposer.yml
+    - sed -i "s/MYMAGENTO_DOCKER_IMAGE_URL/137115356293.dkr.ecr.eu-west-1.amazonaws.com\/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1/g" circleci-webapp-my_magento_eshop-dckcomposer.yml
 
 test:
   pre:
