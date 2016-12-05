@@ -25,7 +25,6 @@ services:
     volumes_from:
       - my_magento_eshop_appcode
       - my_magento_eshop_awslogs
-    links:
     cap_add:
       - ALL
 
