@@ -20,7 +20,7 @@ dependencies:
 
 test:
   pre:
-    - docker-compose -d -f circleci-webapp-my_magento_eshop-dckcomposer.yml up --force-recreate
+    - docker-compose -f circleci-webapp-my_magento_eshop-dckcomposer.yml up -d --force-recreate
   override:
     - curl --retry 10 --retry-delay 5 my_magento_eshop:33333/fpm_ping | grep "pingpong"
   post:
