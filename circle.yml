@@ -8,20 +8,17 @@ machine:
 
 checkout:
   post:
-    - aws s3 cp s3://webapp-my-magento-eshop-appcode/master/app/etc/local.xml magento.local.xml
+    - aws s3 cp s3://webapp-my-magento-eshop-appcode/$CIRCLE_BRANCH/app/etc/local.xml magento.local.xml
 
 dependencies:
-  pre:
-    - sudo pip install docker-compose
   override:
     - docker build -t 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1 .
   post:
-    - eval $(aws ecr get-login --region eu-west-1)
-    - docker push 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1
     - sed -i "s/MYMAGENTO_DOCKER_IMAGE_URL/137115356293.dkr.ecr.eu-west-1.amazonaws.com\/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1/g" circleci-webapp-my_magento_eshop-dckcomposer.yml
 
 test:
   pre:
+    - sudo pip install docker-compose
     - sudo docker-compose -f circleci-webapp-my_magento_eshop-dckcomposer.yml up -d
   override:
     - curl --retry 10 --retry-delay 5 127.0.0.1:33333/fpm_ping | grep "pingpong"
@@ -32,4 +29,7 @@ deployment:
   ecr:
     branch: master
     commands:
-      - docker tag 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:production-latest
+      - eval $(aws ecr get-login --region eu-west-1)
+      - docker push 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1
+      - docker tag 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-latest
+      - docker push 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-latest
