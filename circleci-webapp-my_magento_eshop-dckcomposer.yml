@@ -22,12 +22,10 @@ services:
     depends_on:
       - my_magento_eshop_appcode
       - my_magento_eshop_awslogs
-      - my_magento_eshop_db
     volumes_from:
       - my_magento_eshop_appcode
       - my_magento_eshop_awslogs
     links:
-      - my_magento_eshop_db
     cap_add:
       - ALL
 
