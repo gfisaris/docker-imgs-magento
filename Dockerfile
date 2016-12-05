@@ -1,26 +1,18 @@
 FROM  busybox
 
 RUN rm -rf /var/www
-RUN mkdir -p /var/www/html
+RUN mkdir -p /var/www/magento
+COPY magento /var/www/magento
 
-COPY magento /var/www/html
+RUN rm -rf /var/www/magento/app/etc/local.xml
+COPY magento.local.xml /var/www/magento/app/etc/local.xml
 
-RUN rm -rf /var/www/html/var/log && \
-    mkdir -p /var/www/html/var/log && \
-    /bin/busybox ln -sf /proc/self/fd/2 /var/www/html/var/log/system.log && \
-    /bin/busybox ln -sf /proc/self/fd/2 /var/www/html/var/log/exception.log && \
-    /bin/busybox ls -all /var/www/html/var/log/
-
-RUN /bin/busybox chown -R www-data:www-data /var/www/html && \
+RUN /bin/busybox chown -R www-data:www-data /var/www/magento && \
     /bin/busybox find /var/www/ -type d -exec chmod 755 {} \; && \
     /bin/busybox find /var/www/ -type f -exec chmod 644 {} \; && \
-    /bin/busybox ls -all /var/www/html/ && \
-    /bin/busybox ls -all /var/www/html/var/log/
+    echo "Applied User Owner and Permissions Configuration on Magento Folder"
 
-VOLUME /var/www/html
-WORKDIR /var/www/html
+VOLUME /var/www/magento
+WORKDIR /var/www/magento
 
-RUN ls -all /dev/
-
-#CMD ["/bin/sh"]
-ENTRYPOINT /bin/sh
+#CMD ["/bin/sh -c \" while true; do echo '|'; sleep 60; done\""]

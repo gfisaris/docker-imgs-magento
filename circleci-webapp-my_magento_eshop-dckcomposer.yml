@@ -1,0 +1,47 @@
+version: '2'
+services:
+
+  my_magento_eshop_awslogs:
+    image: my_awslogs:latest
+    volumes:
+      - "~/.aws:/root/.aws"
+
+  my_magento_eshop_appcode:
+    image: MYMAGENTO_DOCKER_IMAGE_URL
+    tty: true
+    depends_on:
+      - my_magento_eshop_awslogs
+    volumes_from:
+      - my_magento_eshop_awslogs
+    command: /bin/sh -c "while true; do echo 'magentoCode'; sleep 30; done"
+
+
+  my_magento_eshop_phpfpm:
+    image: my_phpfpm:latest
+    restart: always
+    depends_on:
+      - my_magento_eshop_appcode
+      - my_magento_eshop_awslogs
+      - my_magento_eshop_db
+    volumes_from:
+      - my_magento_eshop_appcode
+      - my_magento_eshop_awslogs
+    links:
+      - my_magento_eshop_db
+    cap_add:
+      - ALL
+
+  my_magento_eshop_nginx:
+    image: my_nginx:latest
+    restart: always
+    depends_on:
+      - my_magento_eshop_appcode
+      - my_magento_eshop_awslogs
+      - my_magento_eshop_phpfpm
+    volumes_from:
+      - my_magento_eshop_appcode
+      - my_magento_eshop_awslogs
+    ports:
+      - "33333:80"
+    links:
+      - my_magento_eshop_phpfpm

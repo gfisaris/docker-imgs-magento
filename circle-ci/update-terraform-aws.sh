@@ -5,19 +5,25 @@ JQ="jq --raw-output --exit-status"
 
 ##-- All Variables --##
 
-#APPLICATION="myapp"
-#ENVIRONMENT="stg"
+WEBAPP="moshimonsters-magento"
+WEBAPP_ENV="dev"
+
+DCKCNTR_IMGNAME="app-code"
+DCKCNTR_IMGTAG="$CIRCLE_SHA1"
+
+CIRCLECI_GIT_FOLDER=".myGitRepos"
 
   # GitHub.com Repos
-  LOCAL_GIT_FOLDER=".myGitRepos"
   GITHUB_IAC_TF_AWS_ECS="gfisaris/iac-terraform-aws-ecs"
   GITHUB_IAC_TF_AWS_EC2_ALB="gfisaris/iac-terraform-aws-ec2-alb"
 
+
   # AWS ECS
-  AWS_ECS_CLUSTER="$CIRCLE_SHA1"
-  AWS_ECS_SERVICE="$APP-${$CIRCLE_SHA1:0:7}"
-  AWS_ECS_TASK="$CIRCLE_SHA1"
+  AWS_ECS_SERVICE="$WEBAPP-$WEBAPP_ENV-${$CIRCLE_SHA1:0:7}"
+
   AWS_ECS_TASKDEFINITION="$CIRCLE_SHA1"
+  AWS_ECS_TASK_JSON_FILE="$AWS_ECS_TASKDEFINITION"
+
 
   # AWS EC2-ALB
   AWS_EC2_ALB="$APP-${$CIRCLE_SHA1:0:7}"
@@ -26,6 +32,44 @@ JQ="jq --raw-output --exit-status"
   AWS_EC2_ALB_TG_PRTCL="HTTP"
   AWS_EC2_ALB_LST_PRT="80"
   AWS_EC2_ALB_LST_PRTCL="HTTP"
+
+
+##-- Retrieve Information for AWS ECS (using AWS CLi) --##
+
+## GET ACTIVE ECS Cluster Name
+#  AWS_ECS_CLUSTER_NAME=$(aws ecs list-clusters | jq '.clusterArns[]' | sed "s/\"//g" | awk -F/ '{print $2}')
+
+## GET ACTIVE ECS Services Name
+#  AWS_ECS_SERVICE_NAME=$(aws ecs list-services --cluster $AWS_ECS_CLUSTER_NAME | jq '.serviceArns[]' | sed "s/\"//g" | awk -F/ '{print $2}')
+
+## GET ECS Service - ALL Details
+#  aws ecs describe-services --cluster="$AWS_ECS_CLUSTER_NAME" --service="$AWS_ECS_SERVICE_NAME"
+
+#### GET ECS Service - TaskDefinition Details
+
+##  AWS_ECS_TASKDEFINITION_NAME_ACTIVE
+#   aws ecs describe-services --cluster="my-eco-my-app-stg-ecs_cluster" --service="LEP_Stack" \
+#                          | jq '.services[].taskDefinition' \
+#                          | awk -F/ '{print $2}' \
+#                          | awk -F: '{print $1}'
+
+##  AWS_ECS_TASKDEFINITION_REVISION_ACTIVE
+#   aws ecs describe-services --cluster="my-eco-my-app-stg-ecs_cluster" --service="LEP_Stack" \
+#                          | jq '.services[].taskDefinition' \
+#                          | awk -F/ '{print $2}' \
+#                          | awk -F: '{print $2}'
+
+##  AWS_ECS_TASKDEFINITION_CONTAINER_IMAGENAME_ACTIVE
+#   aws ecs describe-task-definition --task-definition $AWS_ECS_TASKDEFINITION_NAME_ACTIVE:$AWS_ECS_TASKDEFINITION_REVISION_ACTIVE \
+#                                | jq '.taskDefinition.containerDefinitions[] | select(.name=="nginx")' \
+#                                | jq '.image' | awk -F: '{print $1}'
+
+##  AWS_ECS_TASKDEFINITION_CONTAINER_IMAGETAG_ACTIVE
+#   aws ecs describe-task-definition --task-definition lep_stack:1 \
+#                                | jq '.taskDefinition.containerDefinitions[] | select(.name=="nginx")' \
+#                                | jq '.image' | awk -F: '{print $2}'
+
+
 
 ##-- All Functions --##
 
@@ -47,26 +91,32 @@ gitpush() {
   git push
 }
 
-create-iac_aws_ecs_task() {
-  cp tasks/task.json.tpl tasks/$AWS_ECS_TASK.json
-  sed -i "s/DCK_IMG_NAME/my_app/g" tasks/$AWS_ECS_TASK.json
-  sed -i "s/DCK_IMG_TAG/$CIRCLE_SHA1/g" tasks/$AWS_ECS_TASK.json
-  gitpush "Adding new ECS Task: $AWS_ECS_TASK"
+generate-iac_aws_ecs_task_json() {
+  cp tasks/lep_stack.json.tpl tasks/$AWS_ECS_TASK_JSON_FILE.json
+
+  sed -i "s/DCKIMG_NGINX_NAME/$WEBAPP-$WEBAPP_ENV-nginx/g"      tasks/$AWS_ECS_TASK_JSON_FILE.json
+  sed -i "s/DCKIMG_NGINX_TAG/$CIRCLE_SHA1/g"                    tasks/$AWS_ECS_TASK_JSON_FILE.json
+  sed -i "s/DCKIMG_PHPFPM_NAME/$WEBAPP-$WEBAPP_ENV-phpfpm/g"    tasks/$AWS_ECS_TASK_JSON_FILE.json
+  sed -i "s/DCKIMG_PHPFPM_TAG/$CIRCLE_SHA1/g"                   tasks/$AWS_ECS_TASK_JSON_FILE.json
+  sed -i "s/DCKIMG_APPCODE_NAME/$WEBAPP-$WEBAPP_ENV-appcode/g"  tasks/$AWS_ECS_TASK_JSON_FILE.json
+  sed -i "s/DCKIMG_APPCODE_TAG/$CIRCLE_SHA1/g"                  tasks/$AWS_ECS_TASK_JSON_FILE.json
+
+  gitpush "Adding AWS ECS Task Definition ($AWS_ECS_TASKDEFINITION) JSON File"
 }
 
-create-iac_aws_ecs_taskdefinition() {
+generate-iac_aws_ecs_taskdefinition() {
   cp task_definitions/taskdefinition.tf.tpl task_definitions/$AWS_ECS_TASKDEFINITION.tf
-  sed -i "s/AWS_ECS_TASK/$AWS_ECS_TASK/g" task_definitions/$AWS_ECS_TASKDEFINITION.tf
+  sed -i "s/AWS_ECS_TASK_JSON_FILE/$AWS_ECS_TASK_JSON_FILE/g" task_definitions/$AWS_ECS_TASKDEFINITION.tf
   sed -i "s/AWS_ECS_TASKDEFINITION/$AWS_ECS_TASKDEFINITION/g" task_definitions/$AWS_ECS_TASKDEFINITION.tf
-  gitpush "Adding new ECS Task Definition: $AWS_ECS_TASKDEFINITION"
+  gitpush "Adding AWS ECS Task Definition ($AWS_ECS_TASKDEFINITION) TF Config File"
 }
 
-create-iac_aws_ecs_service() {
+generate-iac_aws_ecs_service() {
   cp services/service.tf.tpl services/$AWS_ECS_SERVICE.tf
   sed -i "s/AWS_EC2_ALB_TG/$AWS_EC2_ALB_TG/g" services/$AWS_ECS_SERVICE.tf
   sed -i "s/AWS_ECS_SERVICE/$AWS_ECS_SERVICE/g" services/$AWS_ECS_SERVICE.tf
   sed -i "s/AWS_ECS_TASKDEFINITION/$AWS_ECS_TASKDEFINITION/g" services/$AWS_ECS_SERVICE.tf
-  gitpush "Adding new ECS Service: $AWS_ECS_SERVICE"
+  gitpush "Adding AWS ECS Service ($AWS_ECS_SERVICE) TF Config File"
 }
 
 create-iac_aws_ec2_alb_targetgroup() {

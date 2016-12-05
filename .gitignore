@@ -10,3 +10,5 @@ magento/var/package
 magento/var/importexport
 magento/var/log
 magento/var/report
+
+magento.local.xml
