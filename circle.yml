@@ -6,7 +6,7 @@ machine:
 
 checkout:
   post:
-    - aws s3 cp s3://webapp-my_magento_eshop_appcode/$CIRCLE_BRANCH/app/etc/local.xml magento.local.xml
+    - aws s3 cp s3://webapp-my-magento-eshop-appcode/master/app/etc/local.xml magento.local.xml
 
 dependencies:
   pre:
