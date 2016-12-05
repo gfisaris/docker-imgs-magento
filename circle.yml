@@ -1,8 +1,6 @@
 machine:
   timezone:
     Europe/London
-  hosts:
-    my_magento_eshop: 127.0.0.1
   services:
     - docker
 
