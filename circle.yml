@@ -24,7 +24,7 @@ test:
   pre:
     - sudo docker-compose -f circleci-webapp-my_magento_eshop-dckcomposer.yml up -d
   override:
-    - curl --retry 10 --retry-delay 5 my_magento_eshop:33333/fpm_ping | grep "pingpong"
+    - curl --retry 10 --retry-delay 5 127.0.0.1:33333/fpm_ping | grep "pingpong"
   post:
     - sudo docker stop $(docker ps -a -q)
 
@@ -33,5 +33,3 @@ deployment:
     branch: master
     commands:
       - docker tag 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:production-latest
-      - ./circle-ci/push-docker_image-aws_ecr.sh
-      - ./circle-ci/update-terraform-aws.sh
