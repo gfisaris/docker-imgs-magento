@@ -2,7 +2,7 @@ version: '2'
 services:
 
   my_magento_eshop_awslogs:
-    image: 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_awslogs:latest
+    image: 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_awslogs:latest
     volumes:
       - "~/.aws:/root/.aws"
 
@@ -17,7 +17,7 @@ services:
 
 
   my_magento_eshop_phpfpm:
-    image: 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_phpfpm:latest
+    image: 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_phpfpm:latest
     restart: always
     depends_on:
       - my_magento_eshop_appcode
@@ -29,7 +29,7 @@ services:
       - ALL
 
   my_magento_eshop_nginx:
-    image: 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_nginx:latest
+    image: 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_nginx:latest
     restart: always
     depends_on:
       - my_magento_eshop_appcode
