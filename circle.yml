@@ -18,6 +18,7 @@ dependencies:
 
 test:
   pre:
+    - eval $(aws ecr get-login --region eu-west-1)
     - sudo pip install docker-compose
     - sudo docker-compose -f circleci-webapp-my_magento_eshop-dckcomposer.yml up -d
   override:
