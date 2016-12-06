@@ -28,7 +28,7 @@ test:
     - eval $(aws ecr get-login --region eu-west-1)
     - docker-compose -f local-dckcmp.yml up -d
   override:
-    - curl --retry 10 --retry-delay 5 127.0.0.1:$(docker-compose -f local-dckcmp.yml ps my_magento_eshop_nginx 80 | cut -d ":" -f "2")/fpm_ping | grep "pingpong"
+    - curl --retry 10 --retry-delay 5 127.0.0.1:$(docker-compose -f local-dckcmp.yml port my_magento_eshop_nginx 80 | cut -d ":" -f "2")/fpm_ping | grep "pingpong"
   post:
     - docker stop $(docker ps -a -q)
     - ecs-cli configure --profile default --region eu-west-1 --cluster mcboxes --compose-project-name-prefix mymagento_
