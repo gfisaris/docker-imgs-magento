@@ -44,3 +44,5 @@ deployment:
       - docker tag 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:latest
       - docker push 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:latest
       - aws ecs update-service --region eu-west-1 --cluster mcboxes --service my_magento_eshop --task-definition mymagento_$CIRCLE_SHA1
+      - while [ "$(aws ecs describe-services --cluster mcboxes --service my_magento_eshop | jq .services[].pendingCount)" != 0 ]; do echo "Service Updating still in progress.."; sleep 5; done
+      - echo "All Done! Cya soon!"
