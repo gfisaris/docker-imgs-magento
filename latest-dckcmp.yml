@@ -39,3 +39,5 @@ services:
       - my_magento_eshop_awslogs
     links:
       - my_magento_eshop_phpfpm
+    ports:
+      - "80"
