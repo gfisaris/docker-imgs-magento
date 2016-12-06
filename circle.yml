@@ -11,6 +11,13 @@ checkout:
     - aws s3 cp s3://webapp-my-magento-eshop-appcode/$CIRCLE_BRANCH/app/etc/local.xml magento.local.xml
 
 dependencies:
+  pre:
+    - sudo curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
+    - sudo chmod +x /usr/local/bin/ecs-cli
+    - ecs-cli --version
+    - sudo pip install docker-compose
+    - docker-compose --version
+    - docker --version
   override:
     - docker build -t 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1 .
   post:
@@ -19,12 +26,16 @@ dependencies:
 test:
   pre:
     - eval $(aws ecr get-login --region eu-west-1)
-    - sudo pip install docker-compose
     - sudo docker-compose -f circleci-webapp-my_magento_eshop-dckcomposer.yml up -d
   override:
     - curl --retry 10 --retry-delay 5 127.0.0.1:33333/fpm_ping | grep "pingpong"
   post:
     - sudo docker stop $(docker ps -a -q)
+    - ecs-cli configure --profile default --region eu-west-1 --cluster mcboxes --compose-project-name-prefix mymagento_
+    - ecs-cli ps
+    - ecs-cli compose --project-name GoGoShop -file circleci-webapp-my_magento_eshop-dckcomposer.yml create
+
+
 
 deployment:
   ecr:
