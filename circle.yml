@@ -21,7 +21,7 @@ dependencies:
   override:
     - docker build -t 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1 .
   post:
-    - sed -i "s/appcode:latest/appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1/g" latest-dckcmp.yml > local-dckcmp.yml
+    - sed "s/appcode:latest/appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1/g" latest-dckcmp.yml > local-dckcmp.yml
 
 test:
   pre:
@@ -34,7 +34,7 @@ test:
     - ecs-cli configure --profile default --region eu-west-1 --cluster mcboxes --compose-project-name-prefix mymagento_
     - ecs-cli ps
     - ecs-cli compose --project-name $CIRCLE_SHA1 -file latest-dckcmp.yml create
-    
+
 deployment:
   ecr:
     branch: master
