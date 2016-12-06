@@ -33,7 +33,7 @@ test:
     - sudo docker stop $(docker ps -a -q)
     - ecs-cli configure --profile default --region eu-west-1 --cluster mcboxes --compose-project-name-prefix mymagento_
     - ecs-cli ps
-    - ecs-cli compose --project-name GoGoShop -file circleci-webapp-my_magento_eshop-dckcomposer.yml create
+    - ecs-cli compose --project-name $CIRCLE_SHA1 -file circleci-webapp-my_magento_eshop-dckcomposer.yml create
 
 
 
