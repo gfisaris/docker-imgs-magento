@@ -48,4 +48,4 @@ deployment:
       - aws ecs describe-services --region eu-west-1 --cluster mcboxes --service my_magento_eshop | jq ".services[].deployments[] | select(.taskDefinition | contains (\"$(cat taskDef.id)\")) | .desiredCount"
       - aws ecs describe-services --region eu-west-1 --cluster mcboxes --service my_magento_eshop | jq ".services[].deployments[] | select(.taskDefinition | contains (\"$(cat taskDef.id)\")) | .runningCount"
       - while [ "$(aws ecs describe-services --region eu-west-1 --cluster mcboxes --service my_magento_eshop | jq \".services[].deployments[] | select(.taskDefinition | contains (\"$(cat taskDef.id)\")) | .desiredCount\")" != "$(aws ecs describe-services --region eu-west-1 --cluster mcboxes --service my_magento_eshop | jq \".services[].deployments[] | select(.taskDefinition | contains (\"$(cat taskDef.id)\")) | .runningCount\")" ]; do echo "Service Updating still in progress.."; sleep 5; done
-      - echo "All Done! Cya soon!"
+      - echo "All Done! Cya soon!!"
