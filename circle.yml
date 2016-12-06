@@ -21,19 +21,19 @@ dependencies:
   override:
     - docker build -t 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1 .
   post:
-    - sed -i "s/MYMAGENTO_DOCKER_IMAGE_URL/137115356293.dkr.ecr.eu-west-1.amazonaws.com\/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1/g" circleci-webapp-my_magento_eshop-dckcomposer.yml
+    - sed -i "s/appcode:latest/appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1/g" latest-dckcmp.yml > local-dckcmp.yml
 
 test:
   pre:
     - eval $(aws ecr get-login --region eu-west-1)
-    - sudo docker-compose -f circleci-webapp-my_magento_eshop-dckcomposer.yml up -d
+    - docker-compose -f local-dckcmp.yml up -d
   override:
-    - curl --retry 10 --retry-delay 5 127.0.0.1:33333/fpm_ping | grep "pingpong"
+    - curl --retry 10 --retry-delay 5 127.0.0.1:$(docker-compose -f local-dckcmp.yml ps my_magento_eshop_nginx 80 | cut -d: -f2)/fpm_ping | grep "pingpong"
   post:
-    - sudo docker stop $(docker ps -a -q)
+    - docker stop $(docker ps -a -q)
     - ecs-cli configure --profile default --region eu-west-1 --cluster mcboxes --compose-project-name-prefix mymagento_
     - ecs-cli ps
-    - ecs-cli compose --project-name $CIRCLE_SHA1 -file circleci-webapp-my_magento_eshop-dckcomposer.yml create
+    - ecs-cli compose --project-name $CIRCLE_SHA1 -file latest-dckcmp.yml create
 
 
 
@@ -43,5 +43,6 @@ deployment:
     commands:
       - eval $(aws ecr get-login --region eu-west-1)
       - docker push 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1
-      - docker tag 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-latest
-      - docker push 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-latest
+      - docker tag 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:latest
+      - docker push 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:latest
+      - aws ecs update-service --region eu-west-1 --cluster mcboxes --service my_magento_eshop --task-definition mymagento_$CIRCLE_SHA1

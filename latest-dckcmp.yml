@@ -2,13 +2,12 @@ version: '2'
 services:
 
   my_magento_eshop_awslogs:
+    mem_limit: 128m
     image: 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_awslogs:latest
-    volumes:
-      - "~/.aws:/root/.aws"
 
   my_magento_eshop_appcode:
-    image: MYMAGENTO_DOCKER_IMAGE_URL
-    tty: true
+    mem_limit: 128m
+    image: 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:latest
     depends_on:
       - my_magento_eshop_awslogs
     volumes_from:
@@ -17,6 +16,7 @@ services:
 
 
   my_magento_eshop_phpfpm:
+    mem_limit: 128m
     image: 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_phpfpm:latest
     restart: always
     depends_on:
@@ -27,6 +27,7 @@ services:
       - my_magento_eshop_awslogs
 
   my_magento_eshop_nginx:
+    mem_limit: 128m
     image: 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_nginx:latest
     restart: always
     depends_on:
@@ -36,7 +37,5 @@ services:
     volumes_from:
       - my_magento_eshop_appcode
       - my_magento_eshop_awslogs
-    ports:
-      - "33333:80"
     links:
       - my_magento_eshop_phpfpm
