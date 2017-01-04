@@ -48,8 +48,4 @@ services:
     ports:
       - "80"
 
-volumes:
-  data:
-    driver: local-persist
-    driver_opts:
-      mountpoint: /data/local-persist/data
+volumes: ["/hostshare:/containershare"]
