@@ -18,16 +18,19 @@ dependencies:
 
 compile:
   pre:
-    - if [[ $CIRCLE_BRANCH != "master" ]] ; then docker build -t 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1 . ; fi
+    - if [[ $CIRCLE_BRANCH = "master" ]] ; then docker build -t 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1 . ; fi
   post:
-    - if [[ $CIRCLE_BRANCH != "master" ]] ; then sed "s/appcode:latest/appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1/g" latest-dckcmp.yml > local-dckcmp.yml ; fi
+    - if [[ $CIRCLE_BRANCH = "master" ]] ; then sed "s/appcode:latest/appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1/g" latest-dckcmp.yml > local-dckcmp.yml ; fi
 
 test:
   pre:
     - eval $(aws ecr get-login --region eu-west-1)
-    - docker-compose -f local-dckcmp.yml up -d
+    - if [[ $CIRCLE_BRANCH = "master" ]] ; then docker-compose -f local-dckcmp.yml up -d ; fi
+    - if [[ $CIRCLE_BRANCH != "master" ]] ; then docker-compose -f latest-dckcmp.yml up -d ; fi
+    -
   override:
-    - curl --retry 10 --retry-delay 5 127.0.0.1:$(docker-compose -f local-dckcmp.yml port my_magento_eshop_nginx 80 | cut -d ":" -f "2")/fpm_ping | grep "pingpong"
+    - if [[ $CIRCLE_BRANCH = "master" ]] ; then curl --retry 10 --retry-delay 5 127.0.0.1:$(docker-compose -f local-dckcmp.yml port my_magento_eshop_nginx 80 | cut -d ":" -f "2")/fpm_ping | grep "pingpong" ; fi
+    - if [[ $CIRCLE_BRANCH != "master" ]] ; then curl --retry 10 --retry-delay 5 127.0.0.1:$(docker-compose -f latest-dckcmp.yml port my_magento_eshop_nginx 80 | cut -d ":" -f "2")/fpm_ping | grep "pingpong" ; fi
   post:
     - docker stop $(docker ps -a -q)
     - ecs-cli configure --profile default --region eu-west-1 --cluster mcboxes --compose-project-name-prefix mymagento_
