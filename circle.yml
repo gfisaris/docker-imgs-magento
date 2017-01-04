@@ -14,14 +14,13 @@ dependencies:
   pre:
     - sudo curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
     - sudo chmod +x /usr/local/bin/ecs-cli
-    - ecs-cli --version
     - sudo pip install docker-compose
-    - docker-compose --version
-    - docker --version
-  override:
-    - docker build -t 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1 .
+
+compile:
+  pre:
+    - if [[ $CIRCLE_BRANCH != "master" ]] ; then docker build -t 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1 . ; fi
   post:
-    - sed "s/appcode:latest/appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1/g" latest-dckcmp.yml > local-dckcmp.yml
+    - if [[ $CIRCLE_BRANCH != "master" ]] ; then sed "s/appcode:latest/appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1/g" latest-dckcmp.yml > local-dckcmp.yml ; fi
 
 test:
   pre:
