@@ -27,7 +27,6 @@ test:
     - eval $(aws ecr get-login --region eu-west-1)
     - if [[ $CIRCLE_BRANCH = "master" ]] ; then docker-compose -f local-dckcmp.yml up -d ; fi
     - if [[ $CIRCLE_BRANCH != "master" ]] ; then docker-compose -f latest-dckcmp.yml up -d ; fi
-    -
   override:
     - if [[ $CIRCLE_BRANCH = "master" ]] ; then curl --retry 10 --retry-delay 5 127.0.0.1:$(docker-compose -f local-dckcmp.yml port my_magento_eshop_nginx 80 | cut -d ":" -f "2")/fpm_ping | grep "pingpong" ; fi
     - if [[ $CIRCLE_BRANCH != "master" ]] ; then curl --retry 10 --retry-delay 5 127.0.0.1:$(docker-compose -f latest-dckcmp.yml port my_magento_eshop_nginx 80 | cut -d ":" -f "2")/fpm_ping | grep "pingpong" ; fi
