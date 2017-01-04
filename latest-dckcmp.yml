@@ -5,6 +5,7 @@ services:
     mem_limit: 134217728
     image: 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_awslogs:latest
     volumes:
+      - data:/checkme/
       - /mnt/efs.mounts/ecs_common/services/my_magento_eshop_integration_env/common:/var/common-mnt
 
   my_magento_eshop_appcode:
@@ -46,3 +47,9 @@ services:
       - my_magento_eshop_phpfpm
     ports:
       - "80"
+
+volumes:
+  data:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/local-persist/data
