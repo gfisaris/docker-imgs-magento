@@ -52,4 +52,5 @@ deployment:
       - echo "All Done! Cya soon!"
   cidemo:
     tag: /cidemo-.*/
+    commands:
       - echo "Testing AutoBuilds based on Git Tags"
