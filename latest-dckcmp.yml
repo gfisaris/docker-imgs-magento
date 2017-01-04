@@ -4,6 +4,8 @@ services:
   my_magento_eshop_awslogs:
     mem_limit: 134217728
     image: 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_awslogs:latest
+    volumes:
+      - /mnt/efs.mounts/ecs_common/services/my_magento_eshop_integration_env/common:/var/common-mnt
 
   my_magento_eshop_appcode:
     mem_limit: 134217728
@@ -13,7 +15,10 @@ services:
     volumes_from:
       - my_magento_eshop_awslogs
     volumes:
+      - /mnt/efs.mounts/ecs_common/services/my_magento_eshop_integration_env/common:/var/common-mnt
       - /mnt/efs.mounts/ecs_common/services/my_magento_eshop/env/integration/magento/media:/var/www/magento/media
+      - /mnt/efs.mounts/ecs_common/services/my_magento_eshop/env/integration/magento/report:/var/www/magento/var/report
+      - /mnt/efs.mounts/ecs_common/services/my_magento_eshop/env/integration/magento/session:/var/www/magento/var/session
 
   my_magento_eshop_phpfpm:
     mem_limit: 134217728
