@@ -12,8 +12,8 @@ services:
       - my_magento_eshop_awslogs
     volumes_from:
       - my_magento_eshop_awslogs
-    command: /bin/sh -c "while true; do echo 'magentoCode'; sleep 30; done"
-
+    volumes:
+      - /mnt/efs.mounts/ecs_common/services/my_magento_eshop/env/integration/magento/media:/var/www/magento/media
 
   my_magento_eshop_phpfpm:
     mem_limit: 134217728
