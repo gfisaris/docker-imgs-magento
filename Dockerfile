@@ -4,8 +4,8 @@ RUN rm -rf /var/www
 RUN mkdir -p /var/www/magento
 COPY magento /var/www/magento
 
-RUN rm -rf /var/www/magento/app/etc/local.xml
-COPY magento.local.xml /var/www/magento/app/etc/local.xml
+#RUN rm -rf /var/www/magento/app/etc/local.xml
+#COPY magento.local.xml /var/www/magento/app/etc/local.xml
 
 #RUN /bin/busybox chown -R www-data:www-data /var/www/magento && \
 #    /bin/busybox find /var/www/ -type d -exec chmod 755 {} \; && \

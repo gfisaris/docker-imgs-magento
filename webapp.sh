@@ -1,5 +1,7 @@
 #!/bin/sh
 
+/bin/busybox cp -f /var/www/magento/app/etc/local.xml.template /var/www/magento/app/etc/local.xml
+
 /bin/busybox sed -i 's/MAGDB_NAME/'"$DB_NAME"'/g' /var/www/magento/app/etc/local.xml
 /bin/busybox sed -i 's/MAGDB_USER/'"$DB_USER"'/g' /var/www/magento/app/etc/local.xml
 /bin/busybox sed -i 's/MAGDB_PASS/'"$DB_PASS"'/g' /var/www/magento/app/etc/local.xml
