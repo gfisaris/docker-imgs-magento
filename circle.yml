@@ -20,16 +20,13 @@ compile:
 
 test:
   pre:
-    - eval $(aws ecr get-login --region eu-west-1)
+    - if [[ $CIRCLE_BRANCH = "master" ]] ; then eval $(aws ecr get-login --region eu-west-1) ; fi
     - if [[ $CIRCLE_BRANCH = "master" ]] ; then docker-compose -f local-dckcmp.yml up -d ; fi
-    - if [[ $CIRCLE_BRANCH != "master" ]] ; then docker-compose -f latest-dckcmp.yml up -d ; fi
   override:
     - if [[ $CIRCLE_BRANCH = "master" ]] ; then curl --retry 10 --retry-delay 5 127.0.0.1:$(docker-compose -f local-dckcmp.yml port my_magento_eshop_nginx 80 | cut -d ":" -f "2")/fpm_ping | grep "pingpong" ; fi
-    - if [[ $CIRCLE_BRANCH != "master" ]] ; then curl --retry 10 --retry-delay 5 127.0.0.1:$(docker-compose -f latest-dckcmp.yml port my_magento_eshop_nginx 80 | cut -d ":" -f "2")/fpm_ping | grep "pingpong" ; fi
   post:
-    - docker stop $(docker ps -a -q)
+    - if [[ $CIRCLE_BRANCH = "master" ]] ; then docker stop $(docker ps -a -q) ; fi
     - ecs-cli configure --profile default --region eu-west-1 --cluster mcboxes --compose-project-name-prefix mymagento_
-    - ecs-cli ps
     - ecs-cli compose --project-name $CIRCLE_SHA1 -file latest-dckcmp.yml create
 
 deployment:
