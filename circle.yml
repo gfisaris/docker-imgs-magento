@@ -14,35 +14,27 @@ dependencies:
 
 compile:
   pre:
-    - if [[ $CIRCLE_BRANCH = "master" ]] ; then docker build -t 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1 . ; fi
+    - if [[ $CIRCLE_BRANCH = "master" ]] ; then docker build -t $AWS_ACCOUNT_ID.dkr.ecr.eu-west-1.amazonaws.com/$ECR_REPO:$CIRCLE_BUILD_NUM . ; fi
   post:
-    - if [[ $CIRCLE_BRANCH = "master" ]] ; then sed "s/appcode:latest/appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1/g" latest-dckcmp.yml > local-dckcmp.yml ; fi
+    - if [[ $CIRCLE_BRANCH = "master" ]] ; then sed "s/$ECR_REPO:latest/$ECR_REPO:$CIRCLE_BUILD_NUM/g" ecs-DockerCompose.yml > local-DockerCompose.yml ; fi
 
 test:
   pre:
-    - if [[ $CIRCLE_BRANCH = "master" ]] ; then eval $(aws ecr get-login --region eu-west-1) ; fi
-    - if [[ $CIRCLE_BRANCH = "master" ]] ; then docker-compose -f local-dckcmp.yml up -d ; fi
+    - if [[ $CIRCLE_BRANCH = "master" ]] ; then eval $(aws ecr get-login --region $ECS_REGION) ; fi
+    - if [[ $CIRCLE_BRANCH = "master" ]] ; then docker-compose -f local-DockerCompose.yml up -d ; fi
   override:
-    - if [[ $CIRCLE_BRANCH = "master" ]] ; then curl --retry 10 --retry-delay 5 127.0.0.1:$(docker-compose -f local-dckcmp.yml port my_magento_eshop_nginx 80 | cut -d ":" -f "2")/fpm_ping | grep "pingpong" ; fi
+    - if [[ $CIRCLE_BRANCH = "master" ]] ; then curl --retry 10 --retry-delay 5 127.0.0.1:$(docker-compose -f local-DockerCompose.yml port $ECR_REPO 80 | cut -d ":" -f "2")/fpm_ping | grep "pingpong" ; fi
   post:
     - if [[ $CIRCLE_BRANCH = "master" ]] ; then docker stop $(docker ps -a -q) ; fi
-    - ecs-cli configure --profile default --region eu-west-1 --cluster mcboxes --compose-project-name-prefix mymagento_
-    - ecs-cli compose --project-name $CIRCLE_SHA1 -file latest-dckcmp.yml create
+
 
 deployment:
   ecr:
     branch: master
     commands:
-      - eval $(aws ecr get-login --region eu-west-1)
-      - docker push 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1
-      - docker tag 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:$CIRCLE_BRANCH-$CIRCLE_SHA1 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:latest
-      - docker push 137115356293.dkr.ecr.eu-west-1.amazonaws.com/my_magento_eshop_appcode:latest
-      - aws ecs update-service --region eu-west-1 --cluster mcboxes --service my_magento_eshop --task-definition mymagento_$CIRCLE_SHA1 | jq -r '.service.taskDefinition' > taskDef.id
-      - cat taskDef.id
-      - aws ecs describe-services --region eu-west-1 --cluster mcboxes --service my_magento_eshop | jq ".services[].deployments[] | select(.taskDefinition | contains (\"$(cat taskDef.id)\")) | .desiredCount"
-      - aws ecs describe-services --region eu-west-1 --cluster mcboxes --service my_magento_eshop | jq ".services[].deployments[] | select(.taskDefinition | contains (\"$(cat taskDef.id)\")) | .runningCount"
-      - while [ $(aws ecs describe-services --region eu-west-1 --cluster mcboxes --service my_magento_eshop | jq ".services[].deployments[] | select(.taskDefinition | contains (\"$(cat taskDef.id)\")) | .desiredCount") != $(aws ecs describe-services --region eu-west-1 --cluster mcboxes --service my_magento_eshop | jq ".services[].deployments[] | select(.taskDefinition | contains (\"$(cat taskDef.id)\")) | .runningCount") ]; do echo "Service Updating still in progress.."; sleep 5; done
-      - echo "All Done! Cya soon!"
+      - sh circle-ci/ecsCLiCompose.sh $ECS_REGION $ECS_CLUSTER $ECS_SERVICE $CIRCLE_BUILD_NUM || exit 1
+      - sh circle-ci/push2ecr.sh $AWS_ACCOUNT_ID $ECS_REGION $ECR_REPO $CIRCLE_BUILD_NUM || exit 1
+      - sh circle-ci/ecsUpdateService.sh $AWS_ACCOUNT_ID $ECS_REGION $ECS_CLUSTER $ECS_SERVICE $ECS_TASKDFN || exit 1
   cidemo:
     tag: /cidemo-.*/
     commands:
