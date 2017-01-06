@@ -1,10 +1,11 @@
 #!/bin/sh
 set -e
 
-ecsRegion=$1
-ecsCluster=$2
-ecsService=$3
-ecsTaskDef=$4
+awsAccountID=$1
+ecsRegion=$2
+ecsCluster=$3
+ecsService=$4
+ecsTaskDef=$5
 
 ecsOldTaskD=$(aws ecs describe-services --region $ecsRegion --cluster $ecsCluster --service $ecsService | jq -r '.services[] | .taskDefinition')
 
