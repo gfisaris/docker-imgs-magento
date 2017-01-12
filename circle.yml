@@ -13,7 +13,7 @@ dependencies:
 
 compile:
   pre:
-    - if [[ $CIRCLE_BRANCH = "master" ]] ; then docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$ECS_REGION.amazonaws.com/$ECR_REPO:$CIRCLE_BUILD_NUM . ; fi
+    - if [[ $CIRCLE_BRANCH = "master" ]] ; then docker build -t $CI_AWS_ACCOUNT_ID.dkr.ecr.$CI_AWS_ACTIVE_REGION.amazonaws.com/$CI_AWS_ECR_REPO:$CIRCLE_BUILD_NUM . ; fi
 
 test:
   pre:
@@ -29,8 +29,8 @@ deployment:
     branch: master
     commands:
       - sh circle-ci/genEnvFile.sh latest || exit 1
-      - sh circle-ci/ecsCLiCompose.sh $AWS_ACCOUNT_ID $ECS_REGION $ECS_CLUSTER $ECS_SERVICE $CIRCLE_BUILD_NUM || exit 1
-      - sh circle-ci/ecsUpdateService.sh $AWS_ACCOUNT_ID $ECS_REGION $ECS_CLUSTER $ECS_SERVICE $CIRCLE_BUILD_NUM || exit 1
+      - sh circle-ci/ecsCLiCompose.sh || exit 1
+      - sh circle-ci/ecsUpdateService.sh || exit 1
   cidemo:
     tag: /cidemo-.*/
     commands:
