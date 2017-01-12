@@ -6,8 +6,8 @@ cp -f /var/www/magento/app/etc/local.xml.template /var/www/magento/app/etc/local
 
 sed -i 's/{{db_host}}/'"$DB_HOST"'/g' /var/www/magento/app/etc/local.xml
 sed -i 's/{{db_name}}/'"$DB_NAME"'/g' /var/www/magento/app/etc/local.xml
-sed -i 's/{{db_user}}/'"$DB_USER"'/g' /var/www/magento/app/etc/local.xml
-sed -i 's/{{db_pass}}/'"$DB_PASS"'/g' /var/www/magento/app/etc/local.xml
+sed -i 's/{{db_user}}/'"$DB_ADMINNAME"'/g' /var/www/magento/app/etc/local.xml
+sed -i 's/{{db_pass}}/'"$DB_ADMINPASS"'/g' /var/www/magento/app/etc/local.xml
 sed -i 's/{{db_prefix}}/'"$DB_PREFIX"'/g' /var/www/magento/app/etc/local.xml
 
 sed -i 's/{{db_type}}/'"$DB_TYPE"'/g' /var/www/magento/app/etc/local.xml
