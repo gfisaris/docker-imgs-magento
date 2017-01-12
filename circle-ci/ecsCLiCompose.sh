@@ -1,10 +1,7 @@
 #!/bin/sh
 set -e
 
-ecsRegion=$1
-ecsCluster=$2
-ecsService=$3
-ciBuildID=$4
+AWS_ECS_SERVICE_NAME=$CI_PROJECT_NAME"_"$PRJ_ENV
 
-ecs-cli configure --profile default --region $ecsRegion --cluster $ecsCluster --compose-project-name-prefix $ecsService_ || exit 1
-ecs-cli compose --project-name $ciBuildID -file ecs-DockerCompose.yml create || exit 1
+ecs-cli configure --profile default --region $CI_AWS_ACTIVE_REGION --cluster $CI_AWS_ECS_CLUSTER --compose-project-name-prefix $AWS_ECS_SERVICE_NAME || exit 1
+ecs-cli compose --project-name $CIRCLE_BUILD_NUM --file ecs-DockerCompose.yml create || exit 1

@@ -1,0 +1,46 @@
+version: '2'
+services:
+
+  my_magento_eshop_awslogs:
+    mem_limit: 134217728
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_ECS_REGION}.amazonaws.com/my_magento_eshop_awslogs:latest
+
+  my_magento_eshop_appcode:
+    mem_limit: 134217728
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_ECS_REGION}.amazonaws.com/my_magento_eshop_appcode:${DOCKER_IMG_TAG}
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_ADMINNAME=${DB_USER}
+      - DB_ADMINPASS=${DB_PASS}
+      - DB_PREFIX=${DB_PREFIX}
+      - DB_TYPE=${DB_TYPE}
+      - DB_MODEL=${DB_MODEL}
+      - DB_PDO_TYPE=${DB_PDO_TYPE}
+      - DB_INIT_STM=${DB_INIT_STM}
+      - MGT_KEY=${MGT_KEY}
+      - MGT_DATE=${MGT_DATE}
+      - MGT_ADMIN_URL=${MGT_ADMIN_URL}
+      - MGT_SESSION_STORAGE=${MGT_SESSION_STORAGE}
+    volumes_from:
+      - my_magento_eshop_awslogs
+    volumes:
+      - ./magento:/var/www/magento
+
+  my_magento_eshop_phpfpm:
+    mem_limit: 134217728
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_ECS_REGION}.amazonaws.com/my_magento_eshop_phpfpm:latest
+    volumes_from:
+      - my_magento_eshop_appcode
+      - my_magento_eshop_awslogs
+
+  my_magento_eshop_nginx:
+    mem_limit: 134217728
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_ECS_REGION}.amazonaws.com/my_magento_eshop_nginx:latest
+    volumes_from:
+      - my_magento_eshop_appcode
+      - my_magento_eshop_awslogs
+    links:
+      - my_magento_eshop_phpfpm
+    ports:
+      - "80"

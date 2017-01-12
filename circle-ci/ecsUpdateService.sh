@@ -1,24 +1,20 @@
 #!/bin/sh
 set -e
 
-awsAccountID=$1
-ecsRegion=$2
-ecsCluster=$3
-ecsService=$4
-ecsTaskDef=$5
+AWS_ECS_SERVICE_NAME=$CI_PROJECT_NAME"_"$PRJ_ENV
+AWS_ECS_LIVE_TASKDF=$(aws ecs describe-services --region $CI_AWS_ACTIVE_REGION --cluster $CI_AWS_ECS_CLUSTER --service $AWS_ECS_SERVICE_NAME | jq -r '.services[] | .taskDefinition')
+AWS_ECS_UPDT_TASKDFN=$CI_PROJECT_NAME"_"$PRJ_ENV"_"$CIRCLE_BUILD_NUM
 
-ecsOldTaskD=$(aws ecs describe-services --region $ecsRegion --cluster $ecsCluster --service $ecsService | jq -r '.services[] | .taskDefinition')
+aws ecr get-login --region $CI_AWS_ACTIVE_REGION || exit 1
+aws ecs describe-services --region $CI_AWS_ACTIVE_REGION --cluster $CI_AWS_ECS_CLUSTER --service $AWS_ECS_SERVICE_NAME || exit 1
 
-aws ecr get-login --region $ecsRegion || exit 1
-aws ecs describe-services --region $ecsRegion --cluster $ecsCluster --service $ecsService || exit 1
-
-aws ecs update-service --region $ecsRegion --cluster $ecsCluster --service $ecsService --task-definition $ecsTaskDef || exit 1
+aws ecs update-service --region $CI_AWS_ACTIVE_REGION --cluster $CI_AWS_ECS_CLUSTER --service $AWS_ECS_SERVICE_NAME --task-definition $AWS_ECS_UPDT_TASKDFN || exit 1
   echo "Service TaskDefinition Update has started!"
-  echo "Current TaskDefinition:" $ecsOldTaskD
-  echo "Deploying TaskDefinition:" $ecsTaskDef
+  echo "Current TaskDefinition:" $AWS_ECS_LIVE_TASKDF
+  echo "Deploying TaskDefinition:" $AWS_ECS_UPDT_TASKDFN
 
-getDesiredCount="aws ecs describe-services --region $ecsRegion --cluster $ecsCluster --service $ecsService | jq '.services[].deployments[] | select(.taskDefinition | contains (\"$ecsTaskDef\")) | .desiredCount'"
-getRunningCount="aws ecs describe-services --region $ecsRegion --cluster $ecsCluster --service $ecsService | jq '.services[].deployments[] | select(.taskDefinition | contains (\"$ecsTaskDef\")) | .runningCount'"
+getDesiredCount="aws ecs describe-services --region $CI_AWS_ACTIVE_REGION --cluster $CI_AWS_ECS_CLUSTER --service $AWS_ECS_SERVICE_NAME | jq '.services[].deployments[] | select(.taskDefinition | contains (\"$AWS_ECS_UPDT_TASKDFN\")) | .desiredCount'"
+getRunningCount="aws ecs describe-services --region $CI_AWS_ACTIVE_REGION --cluster $CI_AWS_ECS_CLUSTER --service $AWS_ECS_SERVICE_NAME | jq '.services[].deployments[] | select(.taskDefinition | contains (\"$AWS_ECS_UPDT_TASKDFN\")) | .runningCount'"
 
 if [[ $(eval $getDesiredCount) = 0 ]];
   then
@@ -31,4 +27,6 @@ fi
       echo "Updated Tasks Running Count:" $(eval $getRunningCount)
       echo "Service TaskDefinition Update is still in progress.."; sleep 5;
   done
+  echo "Service Tasks Desired Count:" $(eval $getDesiredCount)
+  echo "Updated Tasks Running Count:" $(eval $getRunningCount)
   echo "Service TaskDefinition Update has successfully completed!"
