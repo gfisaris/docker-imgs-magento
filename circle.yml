@@ -30,7 +30,7 @@ deployment:
     commands:
       - sh circle-ci/genEnvFile.sh latest || exit 1
       - sh circle-ci/ecsCLiCompose.sh || exit 1
-      - sh circle-ci/ecsUpdateService.sh || exit 1
+      - sh circle-ci/ecsUpdateService.sh int || exit 1
   cidemo:
     tag: /cidemo-.*/
     commands:

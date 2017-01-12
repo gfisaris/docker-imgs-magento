@@ -1,9 +1,11 @@
 #!/bin/sh
 set -e
 
-AWS_ECS_SERVICE_NAME=$CI_PROJECT_NAME"_"$PRJ_ENV
+DEPLOYMENT_ENV=$1
+
+AWS_ECS_SERVICE_NAME=$CI_PROJECT_NAME"_"$DEPLOYMENT_ENV
 AWS_ECS_LIVE_TASKDF=$(aws ecs describe-services --region $CI_AWS_ACTIVE_REGION --cluster $CI_AWS_ECS_CLUSTER --service $AWS_ECS_SERVICE_NAME | jq -r '.services[] | .taskDefinition')
-AWS_ECS_UPDT_TASKDFN=$CI_PROJECT_NAME"_"$PRJ_ENV"_"$CIRCLE_BUILD_NUM
+AWS_ECS_UPDT_TASKDFN=$CI_PROJECT_NAME"_"$DEPLOYMENT_ENV"_"$CIRCLE_BUILD_NUM
 
 aws ecr get-login --region $CI_AWS_ACTIVE_REGION || exit 1
 aws ecs describe-services --region $CI_AWS_ACTIVE_REGION --cluster $CI_AWS_ECS_CLUSTER --service $AWS_ECS_SERVICE_NAME || exit 1
