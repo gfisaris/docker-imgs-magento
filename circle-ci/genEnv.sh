@@ -24,7 +24,7 @@ MGT_ADMIN_URL=gogopanel
 
 MGT_SESSION_STORAGE=redis-server
 
-ENV_MAGENTO_FOLDER"/tmp/var/www/magento"
+ENV_MAGENTO_FOLDER="/tmp/var/www/magento"
 ENV_BASE_SHARED_FOLDER="/mnt/efs.mounts/ecs_common/services/"$CI_PROJECT_NAME"/env/$DEPLOYMENT_ENV/"
 
 
