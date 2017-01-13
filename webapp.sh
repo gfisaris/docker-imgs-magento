@@ -4,21 +4,21 @@ cp -f /var/www/magento/app/etc/local.xml.template /var/www/magento/app/etc/local
 
 ### Configure Magento Local.xml
 
-sed -i 's/{{db_host}}/'"$DB_HOST"'/g' /var/www/magento/app/etc/local.xml
-sed -i 's/{{db_name}}/'"$DB_NAME"'/g' /var/www/magento/app/etc/local.xml
-sed -i 's/{{db_user}}/'"$DB_ADMINNAME"'/g' /var/www/magento/app/etc/local.xml
-sed -i 's/{{db_pass}}/'"$DB_ADMINPASS"'/g' /var/www/magento/app/etc/local.xml
-sed -i 's/{{db_prefix}}/'"$DB_PREFIX"'/g' /var/www/magento/app/etc/local.xml
+sed -i 's/{{db_host}}/'"<![CDATA[$DB_HOST]]>"'/g' /var/www/magento/app/etc/local.xml
+sed -i 's/{{db_name}}/'"<![CDATA[$DB_NAME]]>"'/g' /var/www/magento/app/etc/local.xml
+sed -i 's/{{db_user}}/'"<![CDATA[$DB_ADMINNAME]]>"'/g' /var/www/magento/app/etc/local.xml
+sed -i 's/{{db_pass}}/'"<![CDATA[$DB_ADMINPASS]]>"'/g' /var/www/magento/app/etc/local.xml
+sed -i 's/{{db_prefix}}/'"<![CDATA[$DB_PREFIX]]>"'/g' /var/www/magento/app/etc/local.xml
 
-sed -i 's/{{db_type}}/'"$DB_TYPE"'/g' /var/www/magento/app/etc/local.xml
-sed -i 's/{{db_model}}/'"$DB_MODEL"'/g' /var/www/magento/app/etc/local.xml
-sed -i 's/{{db_pdo_type}}/'"$DB_PDO_TYPE"'/g' /var/www/magento/app/etc/local.xml
-sed -i 's/{{db_init_statemants}}/'"$DB_INIT_STM"'/g' /var/www/magento/app/etc/local.xml
+sed -i 's/{{db_type}}/'"<![CDATA[$DB_TYPE]]>"'/g' /var/www/magento/app/etc/local.xml
+sed -i 's/{{db_model}}/'"<![CDATA[$DB_MODEL]]>"'/g' /var/www/magento/app/etc/local.xml
+sed -i 's/{{db_pdo_type}}/'"<![CDATA[$DB_PDO_TYPE]]>"'/g' /var/www/magento/app/etc/local.xml
+sed -i 's/{{db_init_statemants}}/'"<![CDATA[$DB_INIT_STM]]>"'/g' /var/www/magento/app/etc/local.xml
 
-sed -i 's/{{key}}/'"$MGT_KEY"'/g' /var/www/magento/app/etc/local.xml
-sed -i 's/{{date}}/'"$MGT_DATE"'/g' /var/www/magento/app/etc/local.xml
-sed -i 's/{{admin_frontname}}/'"$MGT_ADMIN_URL"'/g' /var/www/magento/app/etc/local.xml
-sed -i 's/{{session_save}}/'"$MGT_SESSION_STORAGE"'/g' /var/www/magento/app/etc/local.xml
+sed -i 's/{{key}}/'"<![CDATA[$MGT_KEY]]>"'/g' /var/www/magento/app/etc/local.xml
+sed -i 's/{{date}}/'"<![CDATA[$MGT_DATE]]>"'/g' /var/www/magento/app/etc/local.xml
+sed -i 's/{{admin_frontname}}/'"<![CDATA[$MGT_ADMIN_URL]]>"'/g' /var/www/magento/app/etc/local.xml
+sed -i 's/{{session_save}}/'"<![CDATA[$MGT_SESSION_STORAGE]]>"'/g' /var/www/magento/app/etc/local.xml
 
 ### Assign proper Files User ownership and permissions
 
