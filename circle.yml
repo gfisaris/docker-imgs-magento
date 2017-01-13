@@ -17,21 +17,31 @@ compile:
 
 test:
   pre:
-    - if [[ $CIRCLE_BRANCH = "master" ]] ; then sh circle-ci/genEnvFile.sh $CIRCLE_BUILD_NUM || exit 1  ; fi
+    - if [[ $CIRCLE_BRANCH = "master" ]] ; then sh circle-ci/genEnv.sh $CIRCLE_BUILD_NUM ci || exit 1  ; fi
     - if [[ $CIRCLE_BRANCH = "master" ]] ; then sh circle-ci/testBuild.sh || exit 1  ; fi
   post:
     - if [[ $CIRCLE_BRANCH = "master" ]] ; then sh circle-ci/push2ecr.sh || exit 1  ; fi
 
 
-
 deployment:
-  ecr:
+  intergration_env:
     branch: master
     commands:
-      - sh circle-ci/genEnvFile.sh latest || exit 1
-      - sh circle-ci/ecsCLiCompose.sh int || exit 1
-      - sh circle-ci/ecsUpdateService.sh int || exit 1
-  cidemo:
-    tag: /cidemo-.*/
+      - echo "Initializing deployment to Integration Environment"
+      - sh circle-ci/genEnv.sh latest integration || exit 1
+      - sh circle-ci/ecsCLiCompose.sh integration || exit 1
+      - sh circle-ci/ecsUpdateService.sh integration || exit 1
+  staging_env:
+    tag: /staging-.*/
     commands:
-      - echo "Testing AutoBuilds based on Git Tags"
+      - echo "Initializing deployment to Staging Environment"
+      - sh circle-ci/genEnvFile.sh latest stg || exit 1
+      - sh circle-ci/ecsCLiCompose.sh staging || exit 1
+      - sh circle-ci/ecsUpdateService.sh staging || exit 1
+  production_env:
+    tag: /production-.*/
+    commands:
+      - echo "Initializing deployment to Production Environment"
+      - sh circle-ci/genEnvFile.sh latest prod || exit 1
+      - sh circle-ci/ecsCLiCompose.sh production || exit 1
+      - sh circle-ci/ecsUpdateService.sh production || exit 1
