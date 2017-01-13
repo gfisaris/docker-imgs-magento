@@ -25,7 +25,7 @@ services:
     volumes_from:
       - my_magento_eshop_awslogs
     volumes:
-      - ./magento:${ENV_MAGENTO_FOLDER}
+      - ${ENV_MAGENTO_FOLDER_SOURCE}:${ENV_MAGENTO_FOLDER_TARGET}
       - ${ENV_BASE_SHARED_FOLDER}/magento/var:/var/www/magento/var
       - ${ENV_BASE_SHARED_FOLDER}/magento/media:/var/www/magento/media
 
