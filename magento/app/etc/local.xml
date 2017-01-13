@@ -28,37 +28,37 @@
 <config>
     <global>
         <install>
-            <date>mymgt-date</date>
+            <date><![CDATA[Thu, 07 Jan 2016 16:38:51 +0000]]></date>
         </install>
         <crypt>
-            <key>mymgt-key</key>
+            <key><![CDATA[f2dfd0bbb6368085a1659995b8322190]]></key>
         </crypt>
         <disable_local_modules>false</disable_local_modules>
         <resources>
             <db>
-                <table_prefix>mydb-prefix</table_prefix>
+                <table_prefix><![CDATA[]]></table_prefix>
             </db>
             <default_setup>
                 <connection>
-                    <host>mydb-host.com</host>
-                    <username>mydb-user</username>
-                    <password>mydb-pass</password>
-                    <dbname>mydb-name</dbname>
-                    <initStatements>mydb-init_stm</initStatements>
-                    <model>mydb-model</model>
-                    <type>mydb-type</type>
-                    <pdoType>mydb-pod_type</pdoType>
+                    <host><![CDATA[magento-eshop.cwvkykngxewd.eu-west-1.rds.amazonaws.com]]></host>
+                    <username><![CDATA[mageshopadmin]]></username>
+                    <password><![CDATA[m2g3$h0p2dm!np2$$!!]]></password>
+                    <dbname><![CDATA[magento_db]]></dbname>
+                    <initStatements><![CDATA[SET NAMES utf8]]></initStatements>
+                    <model><![CDATA[mysql4]]></model>
+                    <type><![CDATA[pdo_mysql]]></type>
+                    <pdoType><![CDATA[]]></pdoType>
                     <active>1</active>
                 </connection>
             </default_setup>
         </resources>
-        <session_save>mymgt-sessions</session_save>
+        <session_save><![CDATA[files]]></session_save>
     </global>
     <admin>
         <routers>
             <adminhtml>
                 <args>
-                    <frontName>mymgt-admin_url</frontName>
+                    <frontName><![CDATA[admin]]></frontName>
                 </args>
             </adminhtml>
         </routers>
