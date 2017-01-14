@@ -1,6 +1,0 @@
-version: '2'
-services:
-
-  my_magento_eshop_appcode:
-    volumes:
-      - ./magento:/var/www/magento

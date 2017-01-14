@@ -28,20 +28,6 @@ chown -R www-data:www-data /var/www/magento
 find /var/www/ -type d -exec chmod 755 {} \;
 find /var/www/ -type f -exec chmod 644 {} \;
 
-echo "<![CDATA[$DB_HOST]]>"
-echo "<![CDATA[$DB_NAME]]>"
-echo "<![CDATA[$DB_ADMINNAME]]>"
-echo "<![CDATA[$DB_ADMINPASS]]>"
-echo "<![CDATA[$DB_PREFIX]]>"
-echo "<![CDATA[$DB_TYPE]]>"
-echo "<![CDATA[$DB_MODEL]]>"
-echo "<![CDATA[$DB_PDO_TYPE]]>"
-echo "<![CDATA[$DB_INIT_STM]]>"
-echo "<![CDATA[$MGT_KEY]]>"
-echo "<![CDATA[$MGT_DATE]]>"
-echo "<![CDATA[$MGT_ADMIN_URL]]>"
-echo "<![CDATA[$MGT_SESSION_STORAGE]]>"
-
 ### Keep AppCode Container running..
 
 /bin/sh -c " while true; do echo '|'; sleep 60; done "
