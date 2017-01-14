@@ -22,7 +22,7 @@ aws ecs update-service --region $CI_AWS_ACTIVE_REGION --cluster $CI_AWS_ECS_CLUS
 getDesiredCount="aws ecs describe-services --region $CI_AWS_ACTIVE_REGION --cluster $CI_AWS_ECS_CLUSTER --service $AWS_ECS_SERVICE_NAME | jq '.services[].deployments[] | select(.taskDefinition | contains (\"$AWS_ECS_UPDT_TASKDFN\")) | .desiredCount'"
 getRunningCount="aws ecs describe-services --region $CI_AWS_ACTIVE_REGION --cluster $CI_AWS_ECS_CLUSTER --service $AWS_ECS_SERVICE_NAME | jq '.services[].deployments[] | select(.taskDefinition | contains (\"$AWS_ECS_UPDT_TASKDFN\")) | .runningCount'"
 
-if [[ $(eval $getDesiredCount) = 0 ]];
+if [ $(eval $getDesiredCount) = 0 ];
   then
     echo "Service Desired Count is set to 0." && exit 1
 fi
