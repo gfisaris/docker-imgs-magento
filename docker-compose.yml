@@ -1,48 +1,48 @@
 version: '2'
 services:
 
-  my_magento_eshop_awslogs:
+  awslogs:
     mem_limit: 134217728
-    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_ACTIVE_REGION}.amazonaws.com/my_magento_eshop_awslogs:latest
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_ACTIVE_REGION}.amazonaws.com/${PROJECT_CODENAME}_awslogs:latest
 
-  my_magento_eshop_appcode:
-    mem_limit: 134217728
-    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_ACTIVE_REGION}.amazonaws.com/my_magento_eshop_appcode:${DOCKER_IMG_TAG}
+  codebase:
+    mem_limit: 4194304
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_ACTIVE_REGION}.amazonaws.com/${PROJECT_CODENAME}_codebase:${CODEBASE_DCKIMG_TAG}
     environment:
-      - DB_HOST=${DB_HOST}
-      - DB_NAME=${DB_NAME}
-      - DB_ADMINNAME=${DB_ADMINNAME}
-      - DB_ADMINPASS=${DB_ADMINPASS}
-      - DB_PREFIX=${DB_PREFIX}
-      - DB_TYPE=${DB_TYPE}
-      - DB_MODEL=${DB_MODEL}
-      - DB_PDO_TYPE=${DB_PDO_TYPE}
-      - DB_INIT_STM=${DB_INIT_STM}
-      - MGT_KEY=${MGT_KEY}
-      - MGT_DATE=${MGT_DATE}
-      - MGT_ADMIN_URL=${MGT_ADMIN_URL}
-      - MGT_SESSION_STORAGE=${MGT_SESSION_STORAGE}
+      - MAGENTO_DB_HOST=${MGT_DB_HOST}
+      - MAGENTO_DB_NAME=${MGT_DB_NAME}
+      - MAGENTO_DB_TABLE_PREFIX=${MGT_DB_TBL_PRF}
+      - MAGENTO_DB_ADMINNAME=${MGT_DB_ADMINNAME}
+      - MAGENTO_DB_ADMINPASS=${MGT_DB_ADMINPASS}
+      - MAGENTO_DB_TYPE=${MGT_DB_TYPE}
+      - MAGENTO_DB_MODEL=${MGT_DB_MODEL}
+      - MAGENTO_DB_PDO_TYPE=${MGT_DB_PDO_TYPE}
+      - MAGENTO_DB_INIT_STATEMENTS=${MGT_DB_INIT_STM}
+      - MAGENTO_INSTALL_DATE=${MGT_DATE}
+      - MAGENTO_ENCRYPTION_KEY=${MGT_CRKEY}
+      - MAGENTO_ADMINPANEL_URL=${MGT_ADMIN_URL}
+      - MAGENTO_SESSION_STORAGE=${MGT_SESSION_STORAGE}
     volumes_from:
-      - my_magento_eshop_awslogs
+      - awslogs
     volumes:
       - ${ENV_MAGENTO_FOLDER_HOST}:${ENV_MAGENTO_FOLDER_CONTAINER}
-      - ${ENV_BASE_SHARED_FOLDER}/magento/var:/var/www/magento/var
-      - ${ENV_BASE_SHARED_FOLDER}/magento/media:/var/www/magento/media
+      - ${ENV_MAGENTO_SHARED_FOLDER_HOST}/magento/var:/var/www/magento/var
+      - ${ENV_MAGENTO_SHARED_FOLDER_HOST}/magento/media:/var/www/magento/media
 
-  my_magento_eshop_phpfpm:
+  appserver:
     mem_limit: 134217728
-    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_ACTIVE_REGION}.amazonaws.com/my_magento_eshop_phpfpm:latest
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_ACTIVE_REGION}.amazonaws.com/${PROJECT_CODENAME}_appserver:latest
     volumes_from:
-      - my_magento_eshop_appcode
-      - my_magento_eshop_awslogs
+      - codebase
+      - awslogs
 
-  my_magento_eshop_nginx:
-    mem_limit: 134217728
-    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_ACTIVE_REGION}.amazonaws.com/my_magento_eshop_nginx:latest
+  webserver:
+    mem_limit: 33554432
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_ACTIVE_REGION}.amazonaws.com/${PROJECT_CODENAME}_webserver:latest
     volumes_from:
-      - my_magento_eshop_appcode
-      - my_magento_eshop_awslogs
+      - codebase
+      - awslogs
     links:
-      - my_magento_eshop_phpfpm
+      - appserver
     ports:
       - "80"

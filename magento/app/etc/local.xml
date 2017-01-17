@@ -40,7 +40,7 @@
             </db>
             <default_setup>
                 <connection>
-                    <host><![CDATA[magento-eshop.cwvkykngxewd.eu-west-1.rds.amazonaws.com]]></host>
+                    <host><![CDATA[magentoeshop.cwvkykngxewd.eu-west-1.rds.amazonaws.com]]></host>
                     <username><![CDATA[mageshopadmin]]></username>
                     <password><![CDATA[m2g3$h0p2dm!np2$$!!]]></password>
                     <dbname><![CDATA[magento_db]]></dbname>
