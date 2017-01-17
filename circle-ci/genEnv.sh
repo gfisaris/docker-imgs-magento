@@ -27,8 +27,8 @@ MGT_ADMIN_URL="admin"
 MGT_SESSION_STORAGE="files"
 
 
-ENV_MAGENTO_FOLDER_HOST="/tmp/var/www/magento"
-ENV_MAGENTO_FOLDER_CONTAINER="/tmp/var/www/magento"
+ENV_MAGENTO_FOLDER_HOST="/tmp/placehoder"
+ENV_MAGENTO_FOLDER_CONTAINER="/tmp/placeholder"
 ENV_MAGENTO_SHARED_FOLDER_HOST="/mnt/efs.mounts/ecs_common/services/"$CI_PROJECT_NAME"/$DEPLOYMENT_ENV/"
 
 

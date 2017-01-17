@@ -13,7 +13,7 @@ dependencies:
 
 compile:
   pre:
-    - if [[ $CIRCLE_BRANCH = "master" ]] ; then docker build -t $CI_AWS_ACCOUNT_ID.dkr.ecr.$CI_AWS_ACTIVE_REGION.amazonaws.com/$CI_AWS_ECR_REPO:$CIRCLE_BUILD_NUM . ; fi
+    - if [[ $CIRCLE_BRANCH = "master" ]] ; then docker build -t $CI_AWS_ACCOUNT_ID.dkr.ecr.$CI_AWS_ACTIVE_REGION.amazonaws.com/$CI_AWS_ECR_REPO:$CIRCLE_BUILD_NUM --build-arg PROJECT_CODENAME=$CI_PROJECT_CODENAME . ; fi
     - if [[ $CIRCLE_BRANCH = "master" ]] ; then docker images ; fi
 test:
   pre:
