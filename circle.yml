@@ -14,7 +14,7 @@ dependencies:
 compile:
   pre:
     - if [[ $CIRCLE_BRANCH = "master" ]] ; then docker build -t $CI_AWS_ACCOUNT_ID.dkr.ecr.$CI_AWS_ACTIVE_REGION.amazonaws.com/$CI_AWS_ECR_REPO:$CIRCLE_BUILD_NUM . ; fi
-
+    - if [[ $CIRCLE_BRANCH = "master" ]] ; then docker images ; fi
 test:
   pre:
     - if [[ $CIRCLE_BRANCH = "master" ]] ; then sh circle-ci/genEnv.sh $CIRCLE_BUILD_NUM ci || exit 1  ; fi
