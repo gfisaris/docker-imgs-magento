@@ -1,0 +1,30 @@
+<div class="category-image">
+    <img src="http://127.0.0.1:33333/media/wysiwyg/catmen-newimg.jpg" alt="Bold New Blues - superior fabrics and tailored fits in subtle and standout hues"  />
+</div>
+
+<ul class="catblocks">
+    <li>
+        <a href="http://127.0.0.1:33333/men/new-arrivals.html">
+            <img src="http://127.0.0.1:33333/media/wysiwyg/mencat-newarrivalsimg.jpg" alt="New Arrivals" />
+            <span>New Arrivals</span>
+        </a>
+    </li>
+    <li>
+        <a href="http://127.0.0.1:33333/men/shirts.html">
+            <img src="http://127.0.0.1:33333/media/wysiwyg/clp-sub-m-shirts.jpg"  alt="Shirts" />
+            <span>Shirts</span>
+        </a>
+    </li>
+    <li>
+        <a href="http://127.0.0.1:33333/men/tees-knits-and-polos.html">
+            <img src="http://127.0.0.1:33333/media/wysiwyg/Mencat-teesimg.jpg" alt="Tees, Knits and Polos" />
+            <span>Tees, Knits and Polos</span>
+        </a>
+    </li>
+    <li>
+        <a href="http://127.0.0.1:33333/men/pants-denim.html">
+            <img src="http://127.0.0.1:33333/media/wysiwyg/mencat-pants.jpg" alt="Pants &amp; Denim" />
+            <span>Pants &amp; Denim</span>
+        </a>
+    </li>
+</ul>

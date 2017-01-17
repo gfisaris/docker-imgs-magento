@@ -26,8 +26,8 @@ services:
       - awslogs
     volumes:
       - ${ENV_MAGENTO_FOLDER_HOST}:${ENV_MAGENTO_FOLDER_CONTAINER}
-      - ${ENV_MAGENTO_SHARED_FOLDER_HOST}/magento/var:/var/www/magento/var
-      - ${ENV_MAGENTO_SHARED_FOLDER_HOST}/magento/media:/var/www/magento/media
+      - ${ENV_MAGENTO_SHARED_FOLDER_HOST}/${PROJECT_CODENAME}/var:/var/www/${PROJECT_CODENAME}/var
+      - ${ENV_MAGENTO_SHARED_FOLDER_HOST}/${PROJECT_CODENAME}/media:/var/www/${PROJECT_CODENAME}/media
 
   appserver:
     mem_limit: 134217728
